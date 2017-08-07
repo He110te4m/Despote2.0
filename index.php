@@ -1,12 +1,12 @@
 <?php
 /**
- *
+ * 系统唯一入口
  * @author  He110 (i@he110.top)
  * @date    2017-07-16 08:34:51
  * @version 1.0
  */
 
-!version_compare(PHP_VERSION, '5.3.0', '<') or exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
+version_compare(PHP_VERSION, '5.4.0', '>=') or exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
 
 // 根目录
 define('PATH_ROOT', __DIR__ . '/');
@@ -26,6 +26,10 @@ define('PATH_CORE', PATH_ROOT . 'Despote/');
 define('PATH_BASE', PATH_CORE . 'Base/');
 // 框架扩展类
 define('PATH_EXTEND', PATH_CORE . 'Extends/');
+
+//计时开始
+$mtime = explode(' ', microtime());
+define('CORE_RUN_AT', $mtime[1] + $mtime[0]);
 
 // 开启调试模式
 define('DEBUG', true);

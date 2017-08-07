@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * 路由解析类，用于路由解析，使用 PATHINFO 的方式解析
  * @author  He110 (i@he110.top)
  * @date    2017-07-16 08:34:51
  * @version 1.0
