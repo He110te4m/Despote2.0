@@ -9,7 +9,7 @@ namespace Despote\Base;
 
 class View
 {
-    public function render($view = 'index.php', $params = [], $layout = false, $layoutParams)
+    public function render($view = 'index.php', $params = [], $layout = false, $layoutParams = [])
     {
         $content = $this->renderView(PATH_VIEW . $view, $params);
         // var_dump($content);

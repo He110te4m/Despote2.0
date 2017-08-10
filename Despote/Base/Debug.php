@@ -31,7 +31,12 @@ class Debug
 
     public static function listen()
     {
-        set_error_handler(['\Despote\Base\Debug', "handle"]);
+        // // 自定义异常处理
+        // set_exception_handler(['\Despote\Base\Debug', 'exceptionHandle']);
+        // 自定义普通错误处理
+        set_error_handler(['\Despote\Base\Debug', 'errorHandle']);
+        // // 自定义致命错误处理
+        // register_shutdown_function(['\Despote\Base\Debug', 'fatalHandle']);
     }
 
     private static function getLine($filename, $startLine = 1, $endLine = 20, $method = 'rb')
@@ -61,7 +66,11 @@ class Debug
         return implode('', array_filter($content));
     }
 
-    public static function handle($errno, $errstr, $errfile, $errline)
+    public static function exceptionHandle($exception)
+    {
+    }
+
+    public static function errorHandle($errno, $errstr, $errfile, $errline)
     {
         // 获取报异常时间
         $mtime = explode(' ', microtime());
@@ -109,5 +118,9 @@ pre {
 <h3>错误追踪</h3>
 <pre>{$code}</pre>
 EOF;
+    }
+
+    public static function fatalHandle()
+    {
     }
 }

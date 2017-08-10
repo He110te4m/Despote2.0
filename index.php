@@ -6,7 +6,7 @@
  * @version 1.0
  */
 
-version_compare(PHP_VERSION, '5.4.0', '>=') or exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
+version_compare(PHP_VERSION, '5.4.0', '>=') || exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
 
 // 根目录
 define('PATH_ROOT', __DIR__ . '/');

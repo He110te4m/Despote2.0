@@ -37,7 +37,7 @@ class App
     {
         if (DEBUG) {
             ini_set('display_errors', 'On');
-            error_reporting(E_ALL);
+            // error_reporting(E_ALL);
             \Despote\Base\Debug::listen();
         } else {
             ini_set('display_errors', 'Off');
