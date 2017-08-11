@@ -12,6 +12,7 @@ class Index extends \Despote\Base\Controller
     // 默认动作，用于测试路由解析
     public function index()
     {
+        echo $a;
         $this->render('index.php', [], 'Default.php');
     }
 }

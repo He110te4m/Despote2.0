@@ -43,16 +43,13 @@ class ErrCatch
         $content = [];
         $count   = $endLine - $startLine;
         $fp      = new \SplFileObject($filename, $method);
-        $half = ($startLine + $endLine) / 2;
+        $half    = ($startLine + $endLine) / 2;
         // 转到第N行, seek方法参数从0开始计数
         $fp->seek($startLine - 1);
         for ($i = 0; $i <= $count; ++$i) {
             $nowline = $startLine + $i;
             // current()获取当前行内容
-            $content[] = sprintf("%03d.\t\t%s", $nowline, $fp->current());
-            if ($nowline == $half) {
-                $content[$i] = '<span style="background-color: red;">' . $content[$i] . '</span>';
-            }
+            $content[] = sprintf("<li>[root@He110 ~] %s </li>", $fp->current());
             // 下一行
             $fp->next();
             if ($fp->eof()) {
@@ -63,6 +60,26 @@ class ErrCatch
 
         // array_filter过滤：false,null,''
         return implode('', array_filter($content));
+    }
+
+    private static function getCode($file, $line, $length = 4096)
+    {
+        $returnTxt = null; // 初始化返回
+        $i         = 1; // 行数
+
+        $handle = @fopen($file, "r");
+        if ($handle) {
+            while (!feof($handle)) {
+                $buffer = fgets($handle, $length);
+                if ($line == $i) {
+                    $returnTxt = $buffer;
+                }
+
+                $i++;
+            }
+            fclose($handle);
+        }
+        return $returnTxt;
     }
 
     public static function exceptionHandle($exception)
@@ -78,44 +95,30 @@ class ErrCatch
         $Stime = CORE_RUN_AT;
         // 获取页面执行时间
         $time = $Etime - $Stime;
-        // var_dump($errno);
-        $explain = isset(self::$map[$errno]) ? self::$map[$errno] : '未知错误';
-        $code    = self::getLine($errfile, $errline -5, $errline + 5);
-        // echo "<pre>";
-        // var_dump(debug_backtrace());
-        // echo "</pre>";
-        // echo "<br>-----<br>";
+        // // 获取错误详情
+        // $explain = isset(self::$map[$errno]) ? self::$map[$errno] : '未知错误';
+        // 获取错误代码
+        $code = self::getCode($errfile, $errline);
+        // 获取错误追踪
+        $trace = self::getLine($errfile, $errline - 5, $errline + 5);
+
+        // 输出错误信息
         echo <<<EOF
-<meta charset="utf8">
-<style>
-pre {
-    display: block;
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-    padding: 9.5px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 16px;
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre;
-    white-space: pre-wrap;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: #333;
-}
-</style>
-<h3>错误详情</h3>
-<pre>
-    'Type'    => {$errno}
-    'Detail'  => {$errstr}
-    'Explain' => {$explain}
-    'File'    => {$errfile}
-    'Line'    => {$errline}
-    'Time'    => {$time}
-</pre>
-<h3>错误追踪</h3>
-<pre>{$code}</pre>
+<div style="font-family: 'Consolas'; width: 100%; border: 1px solid #000;">
+    <h1 style="margin: 0; padding: 5px 10px; font-size: 14px; border-bottom: 1px solid #000;">
+        An error occurred while Despote running.
+    </h1>
+    <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 13px; background-color: #000; color: #fff;">
+        <li>Despote Framework [Version 2.0]. Copyright (c) 2017 He110. All rights reserved.</li>
+        <li>Copyright (c) 2017 He110. All rights reserved.</li>
+        <li>[root@He110 ~] Error Code ：$code </li>
+        <li>[root@He110 ~] Error Info ：$errstr </li>
+        <li>[root@He110 ~] Error File ：$errfile </li>
+        <li>[root@He110 ~] Error Line ：$errline </li>
+        <li>&nbsp;</li>
+        $trace
+    </ul>
+</div>
 EOF;
     }
 
@@ -123,4 +126,3 @@ EOF;
     {
     }
 }
-
