@@ -42,15 +42,16 @@ class Verify
 
     /**
      * 获取验证码并输出
+     * @param  string $type 验证码类型，可选值为 num、char，分别对应数字验证码、字符验证码等，若留空则默认为字符验证码
      */
-    public function getVerifyCode()
+    public function getVerifyCode($type = 'char')
     {
         // 创建图片
         $this->createImg();
         // 设置干扰元素
         $this->setDisturb();
         // 取验证码字符串
-        $this->createCode();
+        $this->createCode($type);
         // 设置验证码
         $this->setVerify();
         // 输出图片
@@ -90,33 +91,63 @@ class Verify
         // 加入干扰点
         for ($i = 0; $i < $disturbNum; $i++) {
             // 随机取干扰点颜色
-            $color = imagecolorallocate($this->img, rand(0, 255), rand(0, 255), rand(0, 255));
+            $color = imagecolorallocate($this->img, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
             // 填充干扰点，大小为一个像素
-            imagesetpixel($this->img, rand(1, $this->width - 2), rand(1, $this->height - 2), $color);
+            imagesetpixel($this->img, mt_rand(1, $this->width - 2), mt_rand(1, $this->height - 2), $color);
         }
 
         //加入弧线
         for ($i = 0; $i <= 5; $i++) {
             // 随机取干扰线颜色
-            $color = imagecolorallocate($this->img, rand(128, 255), rand(125, 255), rand(100, 255));
+            $color = imagecolorallocate($this->img, mt_rand(128, 255), mt_rand(125, 255), mt_rand(100, 255));
             // 填充干扰线，线条随机
-            imagearc($this->img, rand(0, $this->width), rand(0, $this->height), rand(30, 300), rand(20, 200), 50, 30, $color);
+            imagearc($this->img, mt_rand(0, $this->width), mt_rand(0, $this->height), mt_rand(30, 300), mt_rand(20, 200), 50, 30, $color);
         }
     }
 
     /**
      * 获取验证码字符串
+     * @param  string $type 验证码类型，可选值为 num、char，分别对应数字验证码、字符验证码等，若留空则默认为字符验证码
      */
-    private function createCode()
+    private function createCode($type = 'char')
+    {
+        switch ($type) {
+            case 'num':
+                $this->getNumVerifyCode();
+                break;
+            default:
+            case 'char':
+                $this->getCharVerifyCode();
+                break;
+        }
+    }
+
+    /**
+     * 生成数字验证码
+     */
+    private function getNumVerifyCode()
+    {
+        // 初始化字符串
+        $this->code = '';
+        // 取随机数字，并将数字转化为字符串
+        for ($i = 0; $i < $this->length; $i++) {
+            $this->code .= mt_rand(0, 9);
+        }
+    }
+
+    /**
+     * 生成字符验证码
+     */
+    private function getCharVerifyCode()
     {
         // 验证码字符库
-        $str = "23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ";
+        $str = '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ';
 
         // 初始化字符串
         $this->code = '';
         // 取随机下标，将字符串作为只读字符数组
         for ($i = 0; $i < $this->length; $i++) {
-            $this->code .= $str{rand(0, strlen($str) - 1)};
+            $this->code .= $str[mt_rand(0, strlen($str) - 1)];
         }
     }
 
@@ -127,13 +158,13 @@ class Verify
     {
         for ($i = 0; $i < $this->length; $i++) {
             // 随机取字符颜色
-            $color = imagecolorallocate($this->img, rand(50, 250), rand(100, 250), rand(128, 250));
+            $color = imagecolorallocate($this->img, mt_rand(50, 250), mt_rand(100, 250), mt_rand(128, 250));
             // 随机取字符大小
-            $size = rand(floor($this->height / 5), floor($this->height / 3));
+            $size = mt_rand(floor($this->height / 5), floor($this->height / 3));
             // 取字符 X 坐标
             $x = floor($this->width / $this->length) * $i + 5;
             // 取字符 Y 坐标
-            $y = rand(0, $this->height - 20);
+            $y = mt_rand(0, $this->height - 20);
             // 在图片中填充字符
             imagechar($this->img, $size, $x, $y, $this->code{$i}, $color);
         }
