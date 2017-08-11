@@ -12,18 +12,15 @@ class App
     public function run()
     {
         // 设置 head 头
-        $this->setHeader();
+        header('Content-type: text/html; charset=UTF-8;');
         // 开启自动加载函数
         $this->setAutoload();
         // 自定义错误处理
         $this->debug();
         // 设置路由解析
         $this->setRoute();
-    }
-
-    private function setHeader()
-    {
-        header('Content-type: text/html; charset=UTF-8;');
+        // 根据 DEBUG 的值判断是否加载 Debug 类
+        !DEBUG || \Despote\Base\Debug::display();
     }
 
     private function setAutoload()
@@ -35,10 +32,10 @@ class App
 
     private function debug()
     {
-        if (DEBUG) {
+        if (ERROR_CATCH) {
             ini_set('display_errors', 'On');
             // error_reporting(E_ALL);
-            \Despote\Base\Debug::listen();
+            \Despote\Base\ErrCatch::listen();
         } else {
             ini_set('display_errors', 'Off');
             error_reporting(0);

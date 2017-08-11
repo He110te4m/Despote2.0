@@ -27,12 +27,16 @@ define('PATH_BASE', PATH_CORE . 'Base/');
 // 框架扩展类
 define('PATH_EXTEND', PATH_CORE . 'Extends/');
 
-//计时开始
-$mtime = explode(' ', microtime());
-define('CORE_RUN_AT', $mtime[1] + $mtime[0]);
-
 // 开启调试模式
 define('DEBUG', true);
+// 开启自定义错误处理
+define('ERROR_CATCH', true);
+
+// 开始计时
+$mtime = explode(' ', microtime());
+define('CORE_RUN_AT', $mtime[1] + $mtime[0]);
+// 统计内存使用
+define('START_MEMORY', memory_get_usage());
 
 // 加载配置文件
 $config = require PATH_CONFIG . 'Config.php';
