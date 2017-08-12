@@ -32,13 +32,10 @@ class App
 
     private function debug()
     {
+        ini_set('display_errors', 'Off');
+        error_reporting(0);
         if (ERROR_CATCH) {
-            ini_set('display_errors', 'On');
-            // error_reporting(E_ALL);
             \Despote\Base\ErrCatch::listen();
-        } else {
-            ini_set('display_errors', 'Off');
-            error_reporting(0);
         }
     }
 

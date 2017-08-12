@@ -9,47 +9,67 @@ namespace Despote\Base;
 
 class ErrCatch
 {
-    private static $map = [
-        '1'     => '运行时致命的错误',
-        '2'     => '运行时非致命的错误',
-        '4'     => '编译时语法解析错误',
-        '8'     => '运行时通知',
-        '16'    => 'PHP 初始化启动过程中发生的致命错误',
-        '32'    => 'PHP 初始化启动过程中发生的警告 ',
-        '64'    => '致命编译时错误',
-        '128'   => '编译时警告',
-        '256'   => '用户产生的错误信息',
-        '512'   => '用户产生的警告信息',
-        '1024'  => '用户产生的通知信息',
-        '2048'  => 'PHP 对代码的修改建议',
-        '4096'  => '可被捕捉的致命错误',
-        '8192'  => '运行时通知',
-        '16384' => '用户产生的警告信息',
-        '32767' => 'E_STRICT 触发的所有错误和警告信息',
-    ];
-
+    /**
+     * 开启监听
+     */
     public static function listen()
     {
         // // 自定义异常处理
-        // set_exception_handler(['\Despote\Base\ErrCatch', 'exceptionHandle']);
-        // 自定义普通错误处理
-        set_error_handler(['\Despote\Base\ErrCatch', 'errorHandle']);
-        // // 自定义致命错误处理
-        // register_shutdown_function(['\Despote\Base\ErrCatch', 'fatalHandle']);
+        // set_exception_handler(['\Despote\Base\ErrCatch', 'on_exception']);
+        // 自定义错误处理
+        set_error_handler(['\Despote\Base\ErrCatch', 'on_error']);
+        // 自定义致命错误处理
+        register_shutdown_function(['\Despote\Base\ErrCatch', 'on_shutdown']);
     }
 
-    private static function getLine($filename, $startLine = 1, $endLine = 20, $method = 'rb')
+    public static function on_exception($exception)
+    {
+    }
+
+    public static function on_error($errno, $errstr, $errfile, $errline)
+    {
+        self::display($errstr, $errfile, $errline);
+    }
+
+    /**
+     * 当程序停止运行时调用，尝试捕获错误
+     * @return [type] [description]
+     */
+    public static function on_shutdown()
+    {
+        // 获取异常信息
+        $error = error_get_last();
+
+        if ($error) {
+            self::display($error['message'], $error['file'], $error['line']);
+        }
+    }
+
+    /**
+     * 错误追踪
+     * @param  String  $filename  文件名，包含文件路径
+     * @param  integer $startLine 起始代码行
+     * @param  integer $endLine   结束代码行
+     * @param  string  $mode      以什么模式打开文件
+     * @return Array              错误代码行(code) 和 错误追踪(trace)
+     */
+    private static function getLine($filename, $startLine = 1, $endLine = 20, $mode = 'rb')
     {
         $content = [];
         $count   = $endLine - $startLine;
-        $fp      = new \SplFileObject($filename, $method);
+        $fp      = new \SplFileObject($filename, $mode);
         $half    = ($startLine + $endLine) / 2;
         // 转到第N行, seek方法参数从0开始计数
         $fp->seek($startLine - 1);
         for ($i = 0; $i <= $count; ++$i) {
             $nowline = $startLine + $i;
             // current()获取当前行内容
-            $content[] = sprintf("<li>[root@He110 ~] %s </li>", $fp->current());
+            if ($nowline == (($startLine + $endLine) / 2)) {
+                $msg['code'] = trim($fp->current());
+                $content[] = sprintf("<li>[root@He110 ~] %s </li>", $msg['code']);
+            } else {
+                $content[] = sprintf("<li>[root@He110 ~] %s </li>", $fp->current());
+            }
             // 下一行
             $fp->next();
             if ($fp->eof()) {
@@ -57,36 +77,12 @@ class ErrCatch
                 break;
             }
         }
+        $msg['trace'] = implode('', array_filter($content));
 
-        // array_filter过滤：false,null,''
-        return implode('', array_filter($content));
+        return $msg;
     }
 
-    private static function getCode($file, $line, $length = 4096)
-    {
-        $returnTxt = null; // 初始化返回
-        $i         = 1; // 行数
-
-        $handle = @fopen($file, "r");
-        if ($handle) {
-            while (!feof($handle)) {
-                $buffer = fgets($handle, $length);
-                if ($line == $i) {
-                    $returnTxt = $buffer;
-                }
-
-                $i++;
-            }
-            fclose($handle);
-        }
-        return $returnTxt;
-    }
-
-    public static function exceptionHandle($exception)
-    {
-    }
-
-    public static function errorHandle($errno, $errstr, $errfile, $errline)
+    private static function display($errstr, $errfile, $errline)
     {
         // 获取报异常时间
         $mtime = explode(' ', microtime());
@@ -95,12 +91,13 @@ class ErrCatch
         $Stime = CORE_RUN_AT;
         // 获取页面执行时间
         $time = $Etime - $Stime;
-        // // 获取错误详情
-        // $explain = isset(self::$map[$errno]) ? self::$map[$errno] : '未知错误';
+
+        // 获取错误信息
+        $msg = self::getLine($errfile, $errline - 5, $errline + 5);
         // 获取错误代码
-        $code = self::getCode($errfile, $errline);
+        $code = $msg['code'];
         // 获取错误追踪
-        $trace = self::getLine($errfile, $errline - 5, $errline + 5);
+        $trace = $msg['trace'];
 
         // 输出错误信息
         echo <<<EOF
@@ -120,9 +117,5 @@ class ErrCatch
     </ul>
 </div>
 EOF;
-    }
-
-    public static function fatalHandle()
-    {
     }
 }
