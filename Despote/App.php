@@ -35,7 +35,7 @@ class App
         ini_set('display_errors', 'Off');
         error_reporting(0);
         if (ERROR_CATCH) {
-            \Despote\Base\ErrCatch::listen();
+            \Despote\Base\ErrCatch::register();
         }
     }
 

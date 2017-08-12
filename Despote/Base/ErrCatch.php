@@ -12,18 +12,56 @@ class ErrCatch
     /**
      * 开启监听
      */
-    public static function listen()
+    public static function register()
     {
-        // // 自定义异常处理
-        // set_exception_handler(['\Despote\Base\ErrCatch', 'on_exception']);
+        // 自定义异常处理
+        set_exception_handler(['\Despote\Base\ErrCatch', 'on_exception']);
         // 自定义错误处理
         set_error_handler(['\Despote\Base\ErrCatch', 'on_error']);
         // 自定义致命错误处理
         register_shutdown_function(['\Despote\Base\ErrCatch', 'on_shutdown']);
     }
 
+    /**
+     * 关闭监听
+     */
+    public static function unregister()
+    {
+        restore_error_handler();
+        restore_exception_handler();
+    }
+
+    /**
+     * 异常处理
+     * @param  Object $exception 异常对象
+     */
     public static function on_exception($exception)
     {
+        // 获取错误信息
+        $msg = self::getLine($exception->getFile(), $exception->getLine() - 5, $exception->getLine() + 5);
+        // 获取错误代码
+        $code = $msg['code'];
+        // 获取错误追踪
+        $trace = $msg['trace'];
+
+        // 输出错误信息
+        echo <<<EOF
+<div style="font-family: 'Consolas'; width: 100%; border: 1px solid #000;">
+    <h1 style="margin: 0; padding: 5px 10px; font-size: 14px; border-bottom: 1px solid #000;">
+        An exception occurred while Despote running.
+    </h1>
+    <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 13px; background-color: #000; color: #fff;">
+        <li>Despote Framework [Version 2.0]. Copyright (c) 2017 He110. All rights reserved.</li>
+        <li>Copyright (c) 2017 He110. All rights reserved.</li>
+        <li>[root@He110 ~] Exception Code ：$code </li>
+        <li>[root@He110 ~] Exception Info ：{$exception->getMessage()} </li>
+        <li>[root@He110 ~] Exception File ：{$exception->getFile()} </li>
+        <li>[root@He110 ~] Exception Line ：{$exception->getLine()} </li>
+        <li>&nbsp;</li>
+        $trace
+    </ul>
+</div>
+EOF;
     }
 
     public static function on_error($errno, $errstr, $errfile, $errline)
@@ -66,7 +104,7 @@ class ErrCatch
             // current()获取当前行内容
             if ($nowline == (($startLine + $endLine) / 2)) {
                 $msg['code'] = trim($fp->current());
-                $content[] = sprintf("<li>[root@He110 ~] %s </li>", $msg['code']);
+                $content[]   = sprintf("<li>[root@He110 ~] %s </li>", $msg['code']);
             } else {
                 $content[] = sprintf("<li>[root@He110 ~] %s </li>", $fp->current());
             }
@@ -84,14 +122,6 @@ class ErrCatch
 
     private static function display($errstr, $errfile, $errline)
     {
-        // 获取报异常时间
-        $mtime = explode(' ', microtime());
-        $Etime = $mtime[1] + $mtime[0];
-        // 获取系统启动时间
-        $Stime = CORE_RUN_AT;
-        // 获取页面执行时间
-        $time = $Etime - $Stime;
-
         // 获取错误信息
         $msg = self::getLine($errfile, $errline - 5, $errline + 5);
         // 获取错误代码
