@@ -11,7 +11,9 @@ class Route
 {
     public function parse()
     {
+        // 获取全局配置
         global $config;
+
         // 获取 URL 中的 pathinfo
         $pathInfo = !empty($_SERVER['PATH_INFO']) ? explode('/', $_SERVER['PATH_INFO']) : [];
         // 获取控制器名称，如果不存在则使用默认值，默认值可以在 Config/Config.php 中修改

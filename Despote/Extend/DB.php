@@ -3,8 +3,8 @@
  * PDO 操作类，包含连接与预处理功能，暂时只支持 MySQL 数据库，SQLite 数据库测试中...
  *
  * 使用方法：
- * // 使用数组实例化本类，数组格式见 /Config/Config.php，用于初始化数据库配置
- * $db = new App\Extend\DB($config);
+ * // 使用数组实例化本类，数组格式见 /Despote/Config/Config.php，用于初始化数据库配置
+ * $db = new Despote\Extend\DB($config);
  * // 连接数据库，如果失败返回 false
  * if ($db-conn() === false) {
  *     exit("连接数据库失败，请检查数据库配置");
@@ -33,7 +33,7 @@
  * @date    2017-07-16 08:34:51
  * @version 1.0
  */
-namespace App\Extend;
+namespace Despote\Extend;
 
 class DB
 {

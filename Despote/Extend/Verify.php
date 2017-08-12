@@ -5,7 +5,7 @@
  * @date    2017-07-16 08:34:51
  * @version 1.0
  */
-namespace App\Extend;
+namespace Despote\Extend;
 
 class Verify
 {

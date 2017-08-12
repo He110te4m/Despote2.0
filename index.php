@@ -15,17 +15,18 @@ define('PATH_ROOT', __DIR__ . '/');
 define('PATH_APP', PATH_ROOT . 'App/');
 // 视图目录
 define('PATH_VIEW', PATH_APP . 'Views/');
+// 布局目录
 define('PATH_LAYOUT', PATH_VIEW . 'Layout/');
 
-// 配置目录
-define('PATH_CONFIG', PATH_ROOT . 'Config/');
 
 // 框架核心
 define('PATH_CORE', PATH_ROOT . 'Despote/');
 // 框架基础类
 define('PATH_BASE', PATH_CORE . 'Base/');
+// 配置目录
+define('PATH_CONFIG', PATH_CORE . 'Config/');
 // 框架扩展类
-define('PATH_EXTEND', PATH_CORE . 'Extends/');
+define('PATH_EXTEND', PATH_CORE . 'Extend/');
 
 // 开启调试模式
 define('DEBUG', true);
