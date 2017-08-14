@@ -73,12 +73,26 @@ class Logger
         <li>Copyright (c) 2017 He110. All rights reserved.</li>
 EOF;
 
-    public function __construct()
+    /**
+     * 初始化日志记录的级别
+     * @param integer $limit 可选值为 0-5，0 为不启用日志，1 为只记录导致系统停止运行的错误，2 为记录导致系统停止运行的错误 和 运行错误，3 为记录导致系统停止运行的错误、运行错误 和 警告，4 为记录导致系统停止运行的错误、运行错误、警告 和 调试信息，5 为记录导致系统停止运行的错误、运行错误、警告、调试信息 和 操作日志
+     */
+    public function __construct($limit = 5)
     {
+        $this->limit = $limit;
     }
 
+    /**
+     * 记录日志
+     * @param  String $level 可选值为：fatal(导致系统停止运行的致命错误)、error(程序运行错误)、warn(警告)、debug(Debug 显示的信息)、info(操作日志)
+     * @param  String $msg   需要记录的信息
+     */
     public function log($level, $msg)
     {
+        if ($this->level[$level] > $this->limit) {
+            return;
+        }
+
         // 记录日志的时间
         $time = date('Y-m-d H-i-s');
         // 日志存放地址
