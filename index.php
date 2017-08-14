@@ -33,7 +33,7 @@ define('PATH_EXTEND', PATH_CORE . 'Extend/');
 define('PATH_LOG', PATH_CORE . 'Runtime/Logs/');
 
 // 开启调试模式
-define('DEBUG', false);
+define('DEBUG', true);
 // 开启自定义错误处理
 define('ERROR_CATCH', true);
 
