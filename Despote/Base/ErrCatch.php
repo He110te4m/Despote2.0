@@ -12,20 +12,20 @@ class ErrCatch
     /**
      * 开启监听
      */
-    public static function register()
+    public function register()
     {
         // 自定义异常处理
-        set_exception_handler(['\Despote\Base\ErrCatch', 'on_exception']);
+        set_exception_handler([$this, 'onException']);
         // 自定义错误处理
-        set_error_handler(['\Despote\Base\ErrCatch', 'on_error']);
+        set_error_handler([$this, 'onError']);
         // 自定义致命错误处理
-        register_shutdown_function(['\Despote\Base\ErrCatch', 'on_shutdown']);
+        register_shutdown_function([$this, 'onShutdown']);
     }
 
     /**
      * 关闭监听
      */
-    public static function unregister()
+    public function unregister()
     {
         restore_error_handler();
         restore_exception_handler();
@@ -35,10 +35,10 @@ class ErrCatch
      * 异常处理
      * @param  Object $exception 异常对象
      */
-    public static function on_exception($exception)
+    public function onException($exception)
     {
         // 获取错误信息
-        $msg = self::getLine($exception->getFile(), $exception->getLine() - 5, $exception->getLine() + 5);
+        $msg = $this->getLine($exception->getFile(), $exception->getLine() - 5, $exception->getLine() + 5);
         // 获取错误代码
         $code = $msg['code'];
         // 获取错误追踪
@@ -64,22 +64,22 @@ class ErrCatch
 EOF;
     }
 
-    public static function on_error($errno, $errstr, $errfile, $errline)
+    public function onError($errno, $errstr, $errfile, $errline)
     {
-        self::display($errstr, $errfile, $errline);
+        $this->display($errstr, $errfile, $errline);
     }
 
     /**
      * 当程序停止运行时调用，尝试捕获错误
      * @return [type] [description]
      */
-    public static function on_shutdown()
+    public function onShutdown()
     {
         // 获取异常信息
         $error = error_get_last();
 
         if ($error) {
-            self::display($error['message'], $error['file'], $error['line']);
+            $this->display($error['message'], $error['file'], $error['line']);
         }
     }
 
@@ -91,7 +91,7 @@ EOF;
      * @param  string  $mode      以什么模式打开文件
      * @return Array              错误代码行(code) 和 错误追踪(trace)
      */
-    private static function getLine($filename, $startLine = 1, $endLine = 20, $mode = 'rb')
+    private function getLine($filename, $startLine = 1, $endLine = 20, $mode = 'rb')
     {
         $content = [];
         $count   = $endLine - $startLine;
@@ -120,10 +120,10 @@ EOF;
         return $msg;
     }
 
-    private static function display($errstr, $errfile, $errline)
+    private function display($errstr, $errfile, $errline)
     {
         // 获取错误信息
-        $msg = self::getLine($errfile, $errline - 5, $errline + 5);
+        $msg = $this->getLine($errfile, $errline - 5, $errline + 5);
         // 获取错误代码
         $code = $msg['code'];
         // 获取错误追踪

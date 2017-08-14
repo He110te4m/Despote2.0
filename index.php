@@ -5,8 +5,11 @@
  * @date    2017-07-16 08:34:51
  * @version 1.0
  */
-
+// 设置最低版本需求
 version_compare(PHP_VERSION, '5.4.0', '>=') || exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
+
+// 定义时区
+date_default_timezone_set("PRC");
 
 // 根目录
 define('PATH_ROOT', __DIR__ . '/');
@@ -27,9 +30,10 @@ define('PATH_BASE', PATH_CORE . 'Base/');
 define('PATH_CONFIG', PATH_CORE . 'Config/');
 // 框架扩展类
 define('PATH_EXTEND', PATH_CORE . 'Extend/');
+define('PATH_LOG', PATH_CORE . 'Runtime/Logs/');
 
 // 开启调试模式
-define('DEBUG', true);
+define('DEBUG', false);
 // 开启自定义错误处理
 define('ERROR_CATCH', true);
 

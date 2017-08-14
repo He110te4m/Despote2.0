@@ -34,6 +34,7 @@
  * @version 1.0
  */
 namespace Despote\Extend;
+use \PDO;
 
 class DB
 {
@@ -77,7 +78,13 @@ class DB
     // 1：只设置错误代码，缺省值
     // 2：除了设置错误代码以外，PDO 还将发出一条传统的 E_WARNING 消息。
     // 3：除了设置错误代码以外，PDO 还将抛出一个 PDOException，并设置其属性，以反映错误代码和错误信息。
-    protected $errmode = \PDO::ERRMODE_SILENT;
+    protected $errmode = PDO::ERRMODE_SILENT;
+    // PDO 错误处理方式可选列表
+    protected $errmodeList = [
+        '1' => PDO::ERRMODE_SILENT,
+        '2' => PDO::ERRMODE_WARNING,
+        '3' => PDO::ERRMODE_EXCEPTION,
+    ];
     // 记录集返回方式
     // 可选的常量有：
     // 1：返回关联数组
@@ -86,7 +93,15 @@ class DB
     // 4：将结果集中的每一行作为一个属性名对应列名的对象返回
     // 5：将结果集中的每一行作为一个对象返回，此对象的变量名对应着列名
     // 6：从结果集中的下一行返回所需要的那一列
-    protected $fetch = \PDO::FETCH_ASSOC;
+    protected $fetch = PDO::FETCH_ASSOC;
+    protected $fetchList = [
+        '1' => PDO::FETCH_ASSOC,
+        '2' => PDO::FETCH_NUM,
+        '3' => PDO::FETCH_BOTH,
+        '4' => PDO::FETCH_OBJ,
+        '5' => PDO::FETCH_LAZY,
+        '6' => PDO::FETCH_COLUMN,
+    ];
     // 是否开启模拟预处理
     protected $pretreat;
 
@@ -153,43 +168,12 @@ class DB
 
                 // 获取错误处理模式配置，如果获取不到，默认为 silent
                 if (isset($config['errmode'])) {
-                    switch ($config['errmode']) {
-                        case 2:
-                            $this->errmode = \PDO::ERRMODE_WARNING;
-                            break;
-                        case 3:
-                            $this->errmode = \PDO::ERRMODE_EXCEPTION;
-                            break;
-                        case 1:
-                        default:
-                            $this->errmode = \PDO::ERRMODE_SILENT;
-                            break;
-                    }
+                    $this->errmode = isset($this->errmodeList[$config['errmode']]) ? $this->errmodeList[$config['errmode']] : $this->errmodeList['1'];
                 }
 
                 // 设置获取数据的方式，如果没有设置，默认为关联数组
                 if (isset($config['fetch'])) {
-                    switch ($config['fetch']) {
-                        case 2:
-                            $this->fetch = \PDO::FETCH_NUM;
-                            break;
-                        case 3:
-                            $this->fetch = \PDO::FETCH_BOTH;
-                            break;
-                        case 4:
-                            $this->fetch = \PDO::FETCH_OBJ;
-                            break;
-                        case 5:
-                            $this->fetch = \PDO::FETCH_LAZY;
-                            break;
-                        case 6:
-                            $this->fetch = \PDO::FETCH_COLUMN;
-                            break;
-                        case 1:
-                        default:
-                            $this->fetch = \PDO::FETCH_ASSOC;
-                            break;
-                    }
+                    $this->fetch = isset($this->fetchList[$config['fetch']]) ? $this->fetchList[$config['fetch']] : $this->fetchList['1'];
                 }
 
                 // 是否开启模拟预处理，默认关闭
@@ -199,7 +183,7 @@ class DB
                 // 获取持久连接配置，如果获取不到，默认为真
                 $this->pconn = isset($config['pconn']) ? $config['pconn'] : true;
                 // 获取配置，并在配置中加入持久连接配置
-                $this->opts = (isset($config['opts']) && is_array($config['opts'])) ? array_merge($config['opts'], [\PDO::ATTR_PERSISTENT => $this->pconn]) : [\PDO::ATTR_PERSISTENT => $this->pconn];
+                $this->opts = (isset($config['opts']) && is_array($config['opts'])) ? array_merge($config['opts'], [PDO::ATTR_PERSISTENT => $this->pconn]) : [PDO::ATTR_PERSISTENT => $this->pconn];
                 // 获取字符集配置，默认为 UTF8
                 $this->charset = isset($config['charset']) ? $config['charset'] : 'utf8';
 
@@ -239,20 +223,20 @@ class DB
         switch ($this->type) {
             case 'mysql':
                 // 创建 PDO 对象
-                $this->pdo = new \PDO('mysql:dbname=' . $this->name . ';host=' . $this->host . $this->port, $this->user, $this->pwd, $this->opts);
+                $this->pdo = new PDO('mysql:dbname=' . $this->name . ';host=' . $this->host . $this->port, $this->user, $this->pwd, $this->opts);
                 // 设置默认字符集
                 $this->pdo->exec('SET NAMES ' . $this->charset);
                 // 设置以报错形式
-                $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, $this->errmode);
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, $this->errmode);
                 // 设置 fetch 时返回数据形式
-                $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetch);
+                $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetch);
                 // 设置是否启用模拟预处理
-                $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
+                $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
 
                 break;
             case "sqlite":
                 // 创建 PDO 对象
-                $this->pdo = new \PDO('sqlite:' . $this->file);
+                $this->pdo = new PDO('sqlite:' . $this->file);
                 // 设置强制磁盘同步配置
                 $this->pdo->exec('PRAGMA synchronous=' . $this->sync);
                 break;
