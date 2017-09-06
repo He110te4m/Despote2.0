@@ -80,6 +80,7 @@ EOF;
     public function __construct($limit = 5)
     {
         $this->limit = $limit;
+        !is_dir($this->path) && @mkdir($this->path, 0777, true);
     }
 
     /**

@@ -10,27 +10,31 @@ version_compare(PHP_VERSION, '5.4.0', '>=') || exit('Sorry, Despote require php5
 
 // 定义时区
 date_default_timezone_set("PRC");
+// 设置分隔符
+define('DS', DIRECTORY_SEPARATOR);
 
 // 根目录
-define('PATH_ROOT', __DIR__ . '/');
+define('PATH_ROOT', __DIR__ . DS);
 
 // 应用目录
-define('PATH_APP', PATH_ROOT . 'App/');
+define('PATH_APP', PATH_ROOT . 'App' . DS);
 // 视图目录
-define('PATH_VIEW', PATH_APP . 'Views/');
+define('PATH_VIEW', PATH_APP . 'Views' . DS);
 // 布局目录
-define('PATH_LAYOUT', PATH_VIEW . 'Layout/');
-
+define('PATH_LAYOUT', PATH_VIEW . 'Layout' . DS);
 
 // 框架核心
-define('PATH_CORE', PATH_ROOT . 'Despote/');
+define('PATH_CORE', PATH_ROOT . 'Despote' . DS);
 // 框架基础类
-define('PATH_BASE', PATH_CORE . 'Base/');
+define('PATH_BASE', PATH_CORE . 'Base' . DS);
 // 配置目录
-define('PATH_CONFIG', PATH_CORE . 'Config/');
+define('PATH_CONFIG', PATH_CORE . 'Config' . DS);
 // 框架扩展类
-define('PATH_EXTEND', PATH_CORE . 'Extend/');
-define('PATH_LOG', PATH_CORE . 'Runtime/Logs/');
+define('PATH_EXTEND', PATH_CORE . 'Extend' . DS);
+// 日志目录
+define('PATH_LOG', PATH_CORE . 'Runtime' . DS . 'Logs' . DS);
+// 缓存目录
+define('PATH_CACHE', PATH_CORE . 'Runtime' . DS . 'Caches' . DS);
 
 // 开启调试模式
 define('DEBUG', true);

@@ -7,7 +7,7 @@
  */
 namespace Despote\Extend;
 
-class Verify
+class Captcha
 {
     ////////////////
     // 验证码属性 //
