@@ -1,6 +1,19 @@
 <?php
 /**
  * Github OAuth 2.0 获取用户资料类
+ * 使用方法：
+ * 1. 初始化对象，并传入 $appid, $appSecret, $callbackUrl, $scope
+ *      $appid = 'APPID';
+ *      $appSecret = 'Secret';
+ *      $callbackUrl = 'http://he110.ngrok.cc/github_oauth/callback.php';
+ *      $scope = 'user';
+ *      $oauth = new \Despote\OAuth\Github($appid, $appSecret, $callbackUrl, $scope);
+ * 2. 获取授权地址，并使用 header 跳转到该地址，让用户完成授权后再回调地址完成后续操作
+ *      header('location: ' . $oauth->getAuthUrl());
+ * 3. 在回调界面获取 code 的值，并使用该令牌获取 access_token/用户信息
+ *      $code = $_GET['code'];
+ *      $token = $oauth->getAccessToken($code);
+ *      $data = $oauth->getUserInfo();
  */
 namespace \Despote\OAuth;
 
@@ -31,11 +44,11 @@ class Github
     private $state;
 
     /**
-     * [__construct description]
-     * @param [type] $appid       [description]
-     * @param [type] $appSecret   [description]
-     * @param [type] $callbackUrl [description]
-     * @param [type] $scope       [description]
+     * 初始化
+     * @param String $appid       开发者 APPID
+     * @param String $appSecret   开发者授权密钥
+     * @param String $callbackUrl 回调地址
+     * @param String $scope       设置需要的权限
      */
     public function __construct($appid, $appSecret, $callbackUrl, $scope)
     {
@@ -43,9 +56,15 @@ class Github
         $this->appSecret   = $appSecret;
         $this->callbackUrl = $callbackUrl;
         $this->scope       = $scope;
-        // $this->http        = new HttpRequest;
     }
 
+    /**
+     * 获取授权接口地址
+     * @param  String $callbackUrl 回调地址，如未传瑞则使用初始化时使用的回调地址
+     * @param  String $state       唯一标识符，防止黑客攻击
+     * @param  String $scope       设置需要的权限
+     * @return String              接口地址，需使用 header() 跳转到该地址方可完成授权
+     */
     public function getAuthUrl($callbackUrl = null, $state = null, $scope = null)
     {
         $params = [
@@ -80,6 +99,11 @@ class Github
         return $this->state;
     }
 
+    /**
+     * 获取 Access_Token
+     * @param  String $code 用于获取 access_token 的令牌
+     * @return String       Access_token
+     */
     public function getAccessToken($code)
     {
         $data               = $this->httpGet(AUTH_DOMAIN . 'login/oauth/access_token?client_id=' . $this->appid . '&client_secret=' . $this->appSecret . '&code=' . $code);
@@ -90,13 +114,24 @@ class Github
         return $access_token;
     }
 
+    /**
+     * 获取用户信息
+     * @return Array  存储用户信息的数组
+     */
     public function getUserInfo()
     {
-        isset($this->access_token) || $this->getAccessToken();
+        isset($this->access_token) || exit('尚未获取 access_token');
 
         return json_decode($this->httpGet(API_DOMAIN . 'user?access_token=' . $this->access_token), true);
     }
 
+    /**
+     * 使用 CURL 模拟 HTTP 请求
+     * @param  String  $url  如需使用 GET 方式，只需在该参数中附加 get 参数即可
+     * @param  Mixed   $data POST 传输的参数，可以为 数组/json/字符串，如果设置此项值为 数组/json，则 $json 需传入 true
+     * @param  boolean $json 是否以 json 传输数据
+     * @return String        页面返回信息
+     */
     private function httpGet($url, $data = null, $json = false)
     {
         // 初始化 curl
