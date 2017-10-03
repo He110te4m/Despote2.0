@@ -15,11 +15,11 @@ class Route
         global $config;
 
         // 获取 URL 中的 pathinfo
-        $pathInfo = !empty($_SERVER['PATH_INFO']) ? explode('/', $_SERVER['PATH_INFO']) : [];
+        $pathInfo = !empty($_GET['r']) ? explode('/', $_GET['r']) : [];
         // 获取控制器名称，如果不存在则使用默认值，默认值可以在 Config/Config.php 中修改
-        $className  = !empty($pathInfo[2]) ? $pathInfo[2] : $config['default']['controller'];
+        $className  = !empty($pathInfo[0]) ? $pathInfo[0] : $config['default']['controller'];
         // 获取控制器方法，如果不存在则使用默认值，默认值可以在 Config/Config.php 中修改
-        $methodName = !empty($pathInfo[3]) ? $pathInfo[3] : $config['default']['methon'];
+        $methodName = !empty($pathInfo[1]) ? $pathInfo[1] : $config['default']['methon'];
         // 拼接控制器
         $controller = 'App\Controller\\' . $className;
         // 实例化控制器
