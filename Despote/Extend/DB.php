@@ -270,7 +270,7 @@ class DB
             // 执行预处理后的语句
             $res->execute($data);
         } else {
-            $res->query($sql);
+            $res = $this->pdo->query($sql);
         }
 
         // 返回结果集
