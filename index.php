@@ -40,6 +40,8 @@ define('PATH_CACHE', PATH_CORE . 'Runtime' . DS . 'Caches' . DS);
 define('DEBUG', true);
 // 开启自定义错误处理
 define('ERROR_CATCH', true);
+// 定义访问校验
+define('DESPOTE', true);
 
 // 开始计时
 $mtime = explode(' ', microtime());
