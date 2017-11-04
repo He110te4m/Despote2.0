@@ -16,7 +16,7 @@ class App
         // 开启自动加载函数
         $this->setAutoload();
         // 自定义错误处理
-        $this->debug();
+        $this->error();
         // 设置路由解析
         $this->setRoute();
         // 根据 DEBUG 的值判断是否加载 Debug 类
@@ -30,12 +30,13 @@ class App
         $autoloadObj->register();
     }
 
-    private function debug()
+    private function error()
     {
         ini_set('display_errors', 'Off');
         error_reporting(0);
         if (ERROR_CATCH) {
-            \Despote\Base\ErrCatch::register();
+            $err = new \Despote\Base\ErrCatch();
+            $err->register();
         }
     }
 

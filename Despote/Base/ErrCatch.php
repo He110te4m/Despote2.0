@@ -53,10 +53,10 @@ class ErrCatch
     <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 13px; background-color: #000; color: #fff;">
         <li>Despote Framework [Version 2.0]. Copyright (c) 2017 He110. All rights reserved.</li>
         <li>Copyright (c) 2017 He110. All rights reserved.</li>
-        <li>[root@He110 ~] Exception Code ：$code </li>
-        <li>[root@He110 ~] Exception Info ：{$exception->getMessage()} </li>
-        <li>[root@He110 ~] Exception File ：{$exception->getFile()} </li>
-        <li>[root@He110 ~] Exception Line ：{$exception->getLine()} </li>
+        <li style="color: green;">[root@He110 ~] Exception Code ：$code </li>
+        <li style="color: red;">[root@He110 ~] Exception Info ：{$exception->getMessage()} </li>
+        <li style="color: blue;">[root@He110 ~] Exception File ：{$exception->getFile()} </li>
+        <li style="color: yellow;">[root@He110 ~] Exception Line ：{$exception->getLine()} </li>
         <li>&nbsp;</li>
         $trace
     </ul>
@@ -138,10 +138,10 @@ EOF;
     <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 13px; background-color: #000; color: #fff;">
         <li>Despote Framework [Version 2.0]. Copyright (c) 2017 He110. All rights reserved.</li>
         <li>Copyright (c) 2017 He110. All rights reserved.</li>
-        <li>[root@He110 ~] Error Code ：$code </li>
-        <li>[root@He110 ~] Error Info ：$errstr </li>
-        <li>[root@He110 ~] Error File ：$errfile </li>
-        <li>[root@He110 ~] Error Line ：$errline </li>
+        <li style="color: green;">[root@He110 ~] Error Code ：$code </li>
+        <li style="color: red;">[root@He110 ~] Error Info ：$errstr </li>
+        <li style="color: blue;">[root@He110 ~] Error File ：$errfile </li>
+        <li style="color: yellow;">[root@He110 ~] Error Line ：$errline </li>
         <li>&nbsp;</li>
         $trace
     </ul>

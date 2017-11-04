@@ -12,6 +12,15 @@ class Index extends \Despote\Base\Controller
     // 默认动作，用于测试路由解析
     public function index()
     {
+
+//使用未定义的变量要报notice的
+        echo $novar;
+
+//除以0要报警告的
+        echo 3 / 0;
+
+//自定义一个错误
+        trigger_error('Trigger a fatal error', E_USER_ERROR);
         $setting = [
             //左定位符
             'tplbegin'    => '{(',
