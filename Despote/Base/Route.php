@@ -28,6 +28,10 @@ class Route
         // 实例化控制器
         $obj = new $controller();
         // 加载方法
-        call_user_func_array([$obj, $methodName], $pathInfo);
+        if (method_exists($obj, $methodName)) {
+            call_user_func_array([$obj, $methodName], $pathInfo);
+        } else {
+            header('location: /404.html');
+        }
     }
 }
