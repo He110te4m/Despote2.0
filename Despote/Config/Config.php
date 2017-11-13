@@ -13,24 +13,24 @@ return [
         'methon'     => 'index',
     ],
     // 数据库配置，可使用多个配置，但键名必须与这个相同
-    'db1'   => [
+    'db1'     => [
         // 数据库类型
-        'type'   => 'mysql',
+        'type' => 'mysql',
 
         // 数据库地址
-        'host'   => 'localhost',
+        'host' => 'localhost',
 
         // // 数据库端口，可选
         // 'port'   => '3306',
 
         // 数据库用户名
-        'user'   => 'root',
+        'user' => 'root',
 
         // 数据库用户密码
-        'pwd'    => 'root',
+        'pwd'  => 'root',
 
         // 数据库名
-        'name'   => 'test',
+        'name' => 'sx',
 
         // // PDO 错误处理方式
         // // 可选的常量有：
@@ -61,7 +61,7 @@ return [
         // // 默认字符集，可选
         // 'charset' => 'utf8',
     ],
-    'db2' => [
+    'db2'     => [
         // 数据库类型
         'type' => 'sqlite',
 

@@ -37,7 +37,7 @@ define('PATH_LOG', PATH_CORE . 'Runtime' . DS . 'Logs' . DS);
 define('PATH_CACHE', PATH_CORE . 'Runtime' . DS . 'Caches' . DS);
 
 // 开启调试模式
-define('DEBUG', true);
+define('DEBUG', false);
 // 开启自定义错误处理
 define('ERROR_CATCH', true);
 // 定义访问校验
@@ -49,8 +49,8 @@ define('CORE_RUN_AT', $mtime[1] + $mtime[0]);
 // 统计内存使用
 define('START_MEMORY', memory_get_usage());
 
-// 加载配置文件
-$config = require PATH_CONFIG . 'Config.php';
+// 加载预置函数
+require PATH_CORE . 'Func.php';
 // 加载框架文件
 require PATH_CORE . 'App.php';
 
