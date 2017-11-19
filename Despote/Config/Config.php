@@ -9,6 +9,7 @@
 return [
     // 默认控制器配置
     'default' => [
+        'module'     => 'App',
         'controller' => 'Index',
         'methon'     => 'index',
     ],

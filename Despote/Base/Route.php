@@ -11,17 +11,14 @@ class Route
 {
     public function parse()
     {
-        // 获取全局配置
-        global $config;
-
         // 获取数据
-        $pathInfo   = !empty($_GET['r']) ? explode('/', $_GET['r']) : [];
+        $pathInfo   = !empty(g('r')) ? explode('/', g('r')) : [];
         $className  = array_shift($pathInfo);
         $methodName = array_shift($pathInfo);
 
         // 数据校验
-        is_null($className) && $className   = $config['default']['controller'];
-        is_null($methodName) && $methodName = $config['default']['methon'];
+        is_null($className) && $className   = g('default')['controller'];
+        is_null($methodName) && $methodName = g('default')['methon'];
 
         // 拼接控制器
         $controller = 'App\Controller\\' . $className;

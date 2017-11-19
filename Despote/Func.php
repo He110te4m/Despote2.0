@@ -29,5 +29,26 @@ function g($name)
  */
 function p($name)
 {
-    return isset($_GET[$name]) ? $_GET[$name] : null;
+    return isset($_POST[$name]) ? $_POST[$name] : null;
+}
+
+/**
+ * 创建多级目录
+ * @param $path string 目标路径
+ * @param $mode int 权限
+ * @return bool 是否成功
+ * @author yuri2
+ * */
+function createDir($path, $mode = 0775)
+{
+    if (is_dir($path)) {
+        //判断目录存在否，存在不创建
+        return true;
+    } else {
+        //不存在则创建
+        // 第三个参数为true即可以创建多极目录
+        $re = @mkdir($path, $mode, true);
+
+        return $re;
+    }
 }
