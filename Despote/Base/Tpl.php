@@ -357,6 +357,7 @@ class Tpl
      */
     private function place($content)
     {
+        // 普通正则替换
         if (is_array($this->instances) && count($this->instances) >= 1) {
             $regulars = $replaces = [];
             foreach ($this->instances as $regular => $replace) {
@@ -366,6 +367,7 @@ class Tpl
             $content = preg_replace($regulars, $replaces, $content);
         }
 
+        // 替换为函数
         if (is_array($this->binds) && count($this->binds) >= 1) {
             foreach ($this->binds as $regular => $replace) {
                 $content = preg_replace_callback($regular, $replace, $content);
